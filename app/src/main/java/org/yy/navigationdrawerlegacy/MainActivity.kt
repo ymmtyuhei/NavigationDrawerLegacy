@@ -3,14 +3,11 @@ package org.yy.navigationdrawerlegacy
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.v4.app.FragmentActivity
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -38,6 +35,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // NavigationView Listener
         navigationView.setNavigationItemSelectedListener(this)
+
+        // set transparent app bar
+        //効果してないかも
+        //actionBar.setDisplayShowTitleEnabled(false)
+        //actionBar.setDisplayShowHomeEnabled(false)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
