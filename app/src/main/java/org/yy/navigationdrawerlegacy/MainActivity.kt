@@ -12,6 +12,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 private val TAG = "MainActivity"
@@ -27,41 +28,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Toolbar
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // DrawerToggle
-        toggle = object : ActionBarDrawerToggle(
+        toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
-            toolbar,
             R.string.drawer_open,
             R.string.drawer_close
-        ){}
-        // 本来はここからコールバックを取得できるはずだが受信できていない
-        // コンストラクタの引数の問題だろうが、減らすとToolbarが消える
-        // https://bit.ly/3bg5DCI
-        //{
-        //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        //        if (item.itemId == R.id.home) {
-        //            if (drawerLayout.isDrawerOpen(navigationView)) {
-        //                drawerLayout.closeDrawer(Gravity.RIGHT)
-        //            } else {
-        //                drawerLayout.openDrawer(Gravity.RIGHT)
-        //            }
-        //        }
-        //        return true
-        //    }
-        //}
+        )
 
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        toolbar.setNavigationOnClickListener {
-            if(it.contentDescription == getString(R.string.drawer_open)){
-                drawerLayout.openDrawer(Gravity.RIGHT)
-            }else if(it.contentDescription == getString(R.string.drawer_close)){
-                drawerLayout.closeDrawer(Gravity.RIGHT)
-            }
-        }
+        //// 乱暴だけどこれでもいい
+        //toolbar.setNavigationOnClickListener {
+        //    if(it.contentDescription == getString(R.string.drawer_open)){
+        //        drawerLayout.openDrawer(Gravity.RIGHT)
+        //    }else if(it.contentDescription == getString(R.string.drawer_close)){
+        //        drawerLayout.closeDrawer(Gravity.RIGHT)
+        //    }
+        //}
 
 
         // NavigationView Listener
@@ -71,6 +58,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //効果してないかも
         //actionBar.setDisplayShowTitleEnabled(false)
         //actionBar.setDisplayShowHomeEnabled(false)
+
+        // カスタムビューからドロワーを開く
+        myTextView.setOnClickListener {
+            onOptionsItemSelected(null)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(drawerLayout.isDrawerOpen(Gravity.RIGHT)){
+            drawerLayout.closeDrawer(Gravity.RIGHT)
+        }else{
+            drawerLayout.openDrawer(Gravity.RIGHT)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
