@@ -8,30 +8,61 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 private val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
 
+    lateinit var toggle : ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // 以下を有効にして、activity_main.xmlでlayout_gravity="start"にする
+        // window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
 
         // Toolbar
         setSupportActionBar(toolbar)
 
         // DrawerToggle
-        val toggle = ActionBarDrawerToggle(
+        toggle = object : ActionBarDrawerToggle(
             this,
             drawerLayout,
             toolbar,
             R.string.drawer_open,
             R.string.drawer_close
-        )
+        ){}
+        // 本来はここからコールバックを取得できるはずだが受信できていない
+        // コンストラクタの引数の問題だろうが、減らすとToolbarが消える
+        // https://bit.ly/3bg5DCI
+        //{
+        //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        //        if (item.itemId == R.id.home) {
+        //            if (drawerLayout.isDrawerOpen(navigationView)) {
+        //                drawerLayout.closeDrawer(Gravity.RIGHT)
+        //            } else {
+        //                drawerLayout.openDrawer(Gravity.RIGHT)
+        //            }
+        //        }
+        //        return true
+        //    }
+        //}
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        toolbar.setNavigationOnClickListener {
+            if(it.contentDescription == getString(R.string.drawer_open)){
+                drawerLayout.openDrawer(Gravity.RIGHT)
+            }else if(it.contentDescription == getString(R.string.drawer_close)){
+                drawerLayout.closeDrawer(Gravity.RIGHT)
+            }
+        }
+
 
         // NavigationView Listener
         navigationView.setNavigationItemSelectedListener(this)
